@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { stringToColour } from '$lib';
-	import type { Card } from './types';
+	import type { Card } from '$lib';
 
 	export let card: Card;
 </script>
@@ -38,11 +38,6 @@
 		margin: var(--element-margin);
 		margin-top: 15px;
 		overflow: hidden;
-		/* transition: transform 250ms ease-in-out;
-
-		&:hover {
-			transform: translateY(20px);
-		} */
 	}
 
 	.badge {

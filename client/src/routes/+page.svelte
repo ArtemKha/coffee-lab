@@ -1,20 +1,37 @@
 <script lang="ts">
-	import type { Cards } from './types';
+	import type { Card as CardType } from '$lib';
+	import { afterUpdate } from 'svelte';
 	import Card from './Card.svelte';
 	import Header from './Header.svelte';
 	import Menu from './Menu.svelte';
 
-	export let data: { cards: Cards };
+	export let data: { card: CardType };
+	let cards = [data.card];
+	let order = 1;
+
+	async function fetchNewCard() {
+		order += 1;
+		const response = await fetch(`/api/cards/${order}`);
+		const newCard = await response.json();
+		cards = [...cards, newCard];
+	}
+
+	afterUpdate(() => {
+		window.scroll({
+			top: document.body.scrollHeight,
+			behavior: 'smooth'
+		});
+	});
 </script>
 
 <main class="container">
 	<Header />
 	<section class="cards">
-		{#each data.cards as card}
+		{#each cards as card}
 			<Card {card} />
 		{/each}
 	</section>
-	<Menu />
+	<Menu {fetchNewCard} />
 </main>
 
 <style>

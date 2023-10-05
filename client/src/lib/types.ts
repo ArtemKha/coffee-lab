@@ -1,4 +1,4 @@
-export type Card = {
+export type RawCard = {
 	id: number;
 	uid: string;
 	blend_name: string;
@@ -7,5 +7,8 @@ export type Card = {
 	notes: string;
 	intensifier: string;
 	image: string;
+};
+export type Card = Omit<RawCard, 'notes'> & {
+	notes: Array<string>;
 };
 export type Cards = Array<Card>;

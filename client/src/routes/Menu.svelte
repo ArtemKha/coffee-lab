@@ -1,5 +1,9 @@
+<script lang="ts">
+	export let fetchNewCard: () => void;
+</script>
+
 <section class="menu">
-	<button disabled={false} type="button" class="action"> Load more </button>
+	<button disabled={false} type="button" class="action" on:click={fetchNewCard}> Load more </button>
 </section>
 
 <style>

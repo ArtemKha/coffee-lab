@@ -11,7 +11,9 @@
 		<span> {card.origin}</span>
 		<div class="badge badgeFloating">{card.intensifier}</div>
 	</div>
-	<img class="image" src={card.image} alt={card.blend_name} />
+	<div class="placeholder">
+		<img class="image" src={card.image} alt={card.blend_name} />
+	</div>
 	<p>
 		{card.variety}
 		<em>variety</em>
@@ -72,10 +74,23 @@
 		user-select: none;
 	}
 
-	.image {
-		border-radius: var(--element-border);
+	.placeholder {
 		max-width: 100%;
 		min-height: var(--image-height);
+		background: url(/img/img-placeholder.png) no-repeat scroll 0 0;
+		background-size: contain;
+		border-radius: var(--element-border);
+	}
+
+	.image {
+		min-height: var(--image-height);
+		max-width: 100%;
+		border-radius: var(--element-border);
+
+		/* hide alt text on image load error */
+		font-size: 40px;
+		color: transparent;
+		text-indent: -1000%;
 	}
 
 	.title {

@@ -12,6 +12,14 @@ export const GET: RequestHandler = async () => {
 
 		return json(card);
 	} catch (err) {
-		throw err;
+		console.error(err);
+		return json(
+			{
+				error: err
+			},
+			{
+				status: 500
+			}
+		);
 	}
 };

@@ -4,7 +4,7 @@ let cache: Card | undefined;
 
 export function cacheCard(value: Card) {
 	cache = value;
-	console.log('Cache was stored.');
+	console.log('Cache was updated.');
 }
 
 export function getCachedCard() {

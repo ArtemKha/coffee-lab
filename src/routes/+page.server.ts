@@ -21,7 +21,7 @@ export const load = (async () => {
 			card
 		};
 	} catch (err) {
-		console.log(err);
+		console.error(err);
 		return error(500, 'Oops! Something went wrong.');
 	}
 }) satisfies PageServerLoad;

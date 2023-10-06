@@ -6,7 +6,7 @@
 
 <section class="menu">
 	<button disabled={loading} type="button" class="action" class:loading on:click={fetchNewCard}
-		>{loading ? '...' : 'Load more (' + timePass + ')'}</button
+		>{loading ? '...' : `Load more (${timePass})`}</button
 	>
 </section>
 

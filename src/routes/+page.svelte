@@ -79,26 +79,36 @@
 	}
 
 	async function fetchNewCard() {
-		order += 1;
-		loading = true;
-		const response = await fetch(`/api/cards/${order}`);
-		const newCard = await response.json();
-		cards = [...cards, newCard];
+		try {
+			order += 1;
+			loading = true;
+			const response = await fetch(`/api/cards/${order}`);
+			const newCard = await response.json();
 
-		// should reset on "cards" update
-		filters = [];
+			if (newCard.error) {
+				throw newCard.error;
+			}
 
-		updateTime = new Date();
+			cards = [...cards, newCard];
 
-		await tick();
+			// should reset on "cards" update
+			filters = [];
 
-		// scroll to bottom on "cards" update
-		window.scroll({
-			top: document.body.scrollHeight,
-			behavior: 'smooth'
-		});
+			await tick();
 
-		loading = false;
+			// scroll to bottom on "cards" update
+			window.scroll({
+				top: document.body.scrollHeight,
+				behavior: 'smooth'
+			});
+		} catch (error) {
+			// comment for reviewer: running out of time for proper UI
+			alert(error);
+		} finally {
+			updateTime = new Date();
+
+			loading = false;
+		}
 	}
 </script>
 

@@ -1,17 +1,73 @@
 <script lang="ts">
-	import type { Card as CardType, Cards } from '$lib';
-	import { afterUpdate, tick } from 'svelte';
-	import Card from './Card.svelte';
-	import Header from './Header.svelte';
-	import Menu from './Menu.svelte';
-	import Filters from './Filters.svelte';
+	import { tick, onDestroy } from 'svelte';
+	import type { Card as CardType } from '$lib';
+	import Card from './index/Card.svelte';
+	import Header from './index/Header.svelte';
+	import Menu from './index/Menu.svelte';
+	import Filters from './index/Filters.svelte';
+	import { CARD_UPDATE_INTERVAL, CHECK_INTERVAL } from './index/constants';
 
+	/**
+	 * initinal "cards" data generated on server
+	 */
 	export let data: { card: CardType };
+	/**
+	 * "cards" fetched from server
+	 */
 	let cards = [data.card];
-	let filtered: Cards = cards;
-	let intensifier: Array<string> = [];
+	/**
+	 * current index of card
+	 */
 	let order = 1;
+	/**
+	 * state of card request
+	 */
+	let loading = false;
+	/**
+	 * active taste filter (should reset on "cards" update)
+	 */
 	let filters: Array<string> = [];
+
+	/**
+	 * retrive "taste" filters from cards (computed)
+	 */
+	$: intensifiers = Array.from(new Set(cards.map((it) => it.intensifier)));
+	/**
+	 * cards to render (computed)
+	 */
+	$: filtered = !filters.length ? cards : cards.filter((it) => filters.includes(it.intensifier));
+
+	/**
+	 * date and time of "cards" update for counter feature
+	 */
+	let updateTime: Date = new Date();
+	/**
+	 * current date and time for counter feature
+	 */
+	let now: Date = new Date();
+
+	/**
+	 * time (in seconds) AFTER "cards" update (computed)
+	 */
+	$: timePass = (now.getTime() - updateTime.getTime()) / 1000;
+	/**
+	 * time (in seconds) BEFORE "cards" update (computed)
+	 */
+	$: counter = Math.floor(CARD_UPDATE_INTERVAL - timePass);
+
+	$: {
+		if (timePass >= CARD_UPDATE_INTERVAL) {
+			fetchNewCard();
+		}
+	}
+
+	let timer = setInterval(() => {
+		now = new Date();
+	}, CHECK_INTERVAL);
+
+	onDestroy(() => {
+		clearInterval(timer);
+	});
 
 	async function setFilter(taste: string) {
 		const includes = filters.includes(taste);
@@ -24,36 +80,37 @@
 
 	async function fetchNewCard() {
 		order += 1;
+		loading = true;
 		const response = await fetch(`/api/cards/${order}`);
 		const newCard = await response.json();
 		cards = [...cards, newCard];
-		filtered = !filters.length ? cards : cards.filter((it) => filters.includes(it.intensifier));
+
+		// should reset on "cards" update
 		filters = [];
+
+		updateTime = new Date();
 
 		await tick();
 
+		// scroll to bottom on "cards" update
 		window.scroll({
 			top: document.body.scrollHeight,
 			behavior: 'smooth'
 		});
-	}
 
-	afterUpdate(() => {
-		intensifier = Array.from(new Set(cards.map((it) => it.intensifier)));
-		filtered = cards;
-		filtered = !filters.length ? cards : cards.filter((it) => filters.includes(it.intensifier));
-	});
+		loading = false;
+	}
 </script>
 
 <main class="container">
 	<Header />
-	<Filters {filters} badges={intensifier} {setFilter} />
+	<Filters {filters} badges={intensifiers} {setFilter} />
 	<section class="cards">
 		{#each filtered as card}
 			<Card {card} />
 		{/each}
 	</section>
-	<Menu {fetchNewCard} />
+	<Menu {fetchNewCard} {loading} timePass={counter} />
 </main>
 
 <style>

@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { stringToColour } from '$lib';
 	import type { Card } from '$lib';
+	import Badge from '$lib/components/Badge.svelte';
+	import BadgeContainer from '$lib/components/BadgeContainer.svelte';
 
 	export let card: Card;
 </script>
@@ -8,8 +10,8 @@
 <div class="card">
 	<p class="title">{card.blend_name}</p>
 	<div class="description">
-		<span> {card.origin}</span>
-		<div class="badge badgeFloating">{card.intensifier}</div>
+		<span>{card.origin}</span>
+		<Badge title={card.intensifier} float={true} role="listitem" />
 	</div>
 	<div class="placeholder">
 		<img class="image" src={card.image} alt={card.blend_name} />
@@ -18,11 +20,11 @@
 		{card.variety}
 		<em>variety</em>
 	</p>
-	<div class="badgeContainer">
+	<BadgeContainer>
 		{#each card.notes as note}
-			<div class="badge" style={`background-color: ${stringToColour(note)};`}>{note}</div>
+			<Badge title={note} style={`background-color: ${stringToColour(note)};`} role="listitem" />
 		{/each}
-	</div>
+	</BadgeContainer>
 </div>
 
 <style>
@@ -38,35 +40,6 @@
 		margin: var(--element-margin);
 		margin-top: 15px;
 		overflow: hidden;
-	}
-
-	.badge {
-		display: inline-block;
-		background-color: var(--accent-color);
-		color: var(--alt-text-color);
-		padding: 2px 5px;
-		border-radius: 5px;
-		margin-right: 5px;
-		opacity: 0.7;
-		white-space: nowrap;
-		height: 25px;
-	}
-
-	.badgeFloating {
-		position: absolute;
-		top: 45px;
-		right: 10px;
-		opacity: initial;
-	}
-
-	.badgeContainer {
-		display: flex;
-		flex-direction: row;
-		flex-wrap: nowrap;
-		height: 45px;
-		overflow-x: auto;
-		overflow-y: hidden;
-		user-select: none;
 	}
 
 	.placeholder {
@@ -89,6 +62,10 @@
 	}
 
 	.title {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+
 		font-size: var(--title-size);
 		margin: 0;
 	}

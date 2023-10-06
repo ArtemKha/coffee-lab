@@ -1,4 +1,4 @@
-export type { Card, Cards } from './types';
+export type { Card, Cards, RawCard } from './types';
 
 export { stringToColour } from './stringToColour';
 export { transformNote } from './transformNote';

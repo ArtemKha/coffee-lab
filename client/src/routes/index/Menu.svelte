@@ -1,9 +1,13 @@
 <script lang="ts">
 	export let fetchNewCard: () => void;
+	export let timePass: number;
+	export let loading = false;
 </script>
 
 <section class="menu">
-	<button disabled={false} type="button" class="action" on:click={fetchNewCard}> Load more </button>
+	<button disabled={loading} type="button" class="action" class:loading on:click={fetchNewCard}
+		>{loading ? '...' : 'Load more (' + timePass + ')'}</button
+	>
 </section>
 
 <style>
@@ -32,5 +36,9 @@
 		&:disabled {
 			cursor: auto;
 		}
+	}
+
+	.loading {
+		filter: grayscale(1);
 	}
 </style>

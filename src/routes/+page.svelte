@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { tick, onDestroy } from 'svelte';
-	import type { Card as CardType } from '$lib';
-	import Card from './index/Card.svelte';
+	import type { Card as CardType } from '$lib/Card';
+	import Card from './index/Card/Card.svelte';
 	import Header from './index/Header.svelte';
-	import Menu from './index/Menu.svelte';
-	import Filters from './index/Filters.svelte';
+	import Menu from './index/Menu/Menu.svelte';
+	import Filters from './index/Filters/Filters.svelte';
 	import { CARD_UPDATE_INTERVAL, CHECK_INTERVAL } from './index/constants';
 
 	/**
@@ -12,13 +12,9 @@
 	 */
 	export let data: { card: CardType };
 	/**
-	 * "cards" fetched from server
+	 * all "cards" fetched from server
 	 */
 	let cards = [data.card];
-	/**
-	 * current index of card
-	 */
-	let order = 1;
 	/**
 	 * state of card request
 	 */
@@ -29,7 +25,7 @@
 	let filters: Array<string> = [];
 
 	/**
-	 * retrive "taste" filters from cards (computed)
+	 * retrieve "taste" filters from cards (computed)
 	 */
 	$: intensifiers = Array.from(new Set(cards.map((it) => it.intensifier)));
 	/**
@@ -80,9 +76,8 @@
 
 	async function fetchNewCard() {
 		try {
-			order += 1;
 			loading = true;
-			const response = await fetch(`/api/cards/${order}`);
+			const response = await fetch('/api/card');
 			const newCard = await response.json();
 
 			if (newCard.error) {
@@ -102,7 +97,6 @@
 				behavior: 'smooth'
 			});
 		} catch (error) {
-			// comment for reviewer: running out of time for proper UI
 			alert(error);
 		} finally {
 			updateTime = new Date();
@@ -114,13 +108,13 @@
 
 <main class="container">
 	<Header />
-	<Filters {filters} badges={intensifiers} {setFilter} />
+	<Filters {filters} options={intensifiers} {setFilter} />
 	<section class="cards">
 		{#each filtered as card}
 			<Card {card} />
 		{/each}
 	</section>
-	<Menu {fetchNewCard} {loading} timePass={counter} />
+	<Menu {fetchNewCard} {loading} {counter} />
 </main>
 
 <style>

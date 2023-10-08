@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { stringToColour } from '$lib';
-	import type { Card } from '$lib';
+	import type { Card } from '$lib/Card';
 	import Badge from '$lib/components/Badge.svelte';
 	import BadgeContainer from '$lib/components/BadgeContainer.svelte';
 
@@ -45,7 +45,7 @@
 	.placeholder {
 		max-width: 100%;
 		min-height: var(--image-height);
-		background: url(/img/img-placeholder.png) no-repeat scroll 0 0;
+		background: url(/img/img-placeholder.png) no-repeat;
 		background-size: contain;
 		border-radius: var(--element-border);
 	}

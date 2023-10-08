@@ -1,1 +1,1 @@
-export { cacheCard, getCachedCard } from './cache';
+export { setCache, getCache } from './cache';

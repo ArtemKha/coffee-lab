@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit';
-import { fetchCard, transformNote } from '$lib';
-import { cacheCard } from '$lib/server';
+import { fetchCard, transformNote } from '$lib/Card';
+import { setCache } from '$lib/server';
 import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async () => {
@@ -8,7 +8,7 @@ export const GET: RequestHandler = async () => {
 		const rawCard = await fetchCard();
 		const card = transformNote(rawCard);
 
-		cacheCard(card);
+		setCache(card);
 
 		return json(card);
 	} catch (err) {

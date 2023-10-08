@@ -1,13 +1,13 @@
-import type { Card } from '$lib/types';
+import type { Card } from '$lib/Card';
 
 let cache: Card | undefined;
 
-export function cacheCard(value: Card) {
+export function setCache(value: Card) {
 	cache = value;
 	console.log('Cache was updated.');
 }
 
-export function getCachedCard() {
+export function getCache() {
 	if (cache) {
 		console.log('Cache was found.');
 		return cache;

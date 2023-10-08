@@ -16,7 +16,7 @@
 	export let onAction: OnAction = undefined;
 	export let active: boolean = false;
 
-	$: isButton = role === 'button';
+	$: asButton = role === 'button';
 
 	function onKeyDown(e: KeyboardEvent) {
 		if (e.key === 'enter') {
@@ -32,10 +32,10 @@
 	on:keydown={onKeyDown}
 	on:click={onAction}
 	class="badge"
-	class:badgeFloating={float}
-	class:active={isButton && active}
-	class:inactive={isButton && !active}
-	style={$$props.style}
+	class:float
+	class:asButton
+	class:active
+	class:inactive={!active}
 	{role}
 >
 	{title}
@@ -54,20 +54,23 @@
 		height: 25px;
 	}
 
-	.active {
-		filter: none;
-		border-bottom: 3px solid var(--accent-color);
-	}
-
-	.inactive {
-		filter: grayscale(1);
-
-		&:hover {
+	.asButton {
+		cursor: pointer;
+		&.active {
 			filter: none;
+			border-bottom: 3px solid var(--accent-color);
+		}
+
+		&.inactive {
+			filter: grayscale(1);
+
+			&:hover {
+				filter: none;
+			}
 		}
 	}
 
-	.badgeFloating {
+	.float {
 		position: absolute;
 		top: 45px;
 		right: 10px;

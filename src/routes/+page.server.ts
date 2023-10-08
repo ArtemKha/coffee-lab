@@ -1,20 +1,20 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { fetchCard, transformNote, type Card } from '$lib';
-import { cacheCard, getCachedCard } from '$lib/server';
+import { fetchCard, transformNote, type Card } from '$lib/Card';
+import { setCache, getCache } from '$lib/server';
 
 export const load = (async () => {
 	try {
 		let card: Card;
 
-		const cachedCard = await getCachedCard();
+		const cachedCard = await getCache();
 
 		if (cachedCard) {
 			card = cachedCard;
 		} else {
 			const rawCard = await fetchCard();
 			card = transformNote(rawCard);
-			cacheCard(card);
+			setCache(card);
 		}
 
 		return {
